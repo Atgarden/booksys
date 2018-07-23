@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link type="text/css" rel="stylesheet" href="../css/style.css" />
+
+<script type="text/javascript" src="../js/jquery-1.12.2.min.js"></script>
+<!-- 进行表单验证，validate依赖于jQuery，所以先引入jQuery -->
+<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+.STYLE1 {
+	font-size: 12px;
+	color: #000000;
+}
+.STYLE5 {font-size: 12}
+.STYLE7 {font-size: 12px; color: #FFFFFF; }
+-->
+</style>
+</head>
+<body>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td height="57" background="images/main_03.gif">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="378" height="57" background="images/main_03.gif"
+						align="right">&nbsp;</td>
+					<td align="center"><font size="+3" color="blue"><strong>后台管理系统</strong></font></td>
+					<td width="281" valign="bottom">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						</table>
+					</td>
+				</tr>
+			</table></td>
+		</tr>
+		<tr>
+			<td height="40" background="images/main_10.gif">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				</table>
+			</td>
+		</tr>
+	</table>
+	<div id="login">
+	<h2>管理员登陆</h2>
+	<form id="loginForm" method="post" action="">
+		<dl>
+			<dt>用户名：</dt>
+			<dd><input class="input-text" type="text" name="adminName" /></dd>
+			<dt>密　码：</dt>
+			<dd><input class="input-text" type="password" name="passWord" /></dd>
+			<dt></dt>
+			<dd class="button"><input class="input-btn" type="submit" name="submit" value="" /></dd>
+		</dl>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#loginForm").validate({
+			rules: {
+				adminName: "required",
+				passWord: {
+					required: true,
+					minlength: 5
+				}
+			},
+			messages: {
+				adminName: "请输入用户名",
+				passWord: {
+					required: "请输入密码",
+					minlength: "密码长度不得少于五位"
+				}
+			},
+			submitHandler: function() {
+				$.ajax({
+					type:"post",
+					url:"/booksys/alogin",
+					data:$("#loginForm").serialize(),
+					dataType:"json",
+					success:function(data) {
+						if (data.code == 1) {
+							window.location.href = "main.html";
+						} else {
+							alert(data.msg);
+						}
+					}
+				})
+			}
+		})
+	})
+</script>
+
+</body>
+</html>

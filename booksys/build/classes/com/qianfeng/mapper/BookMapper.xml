@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qianfeng.dao.IBookDao">
+
+	<resultMap type="books" id="bookMapper">
+		<id property="id" column="id"/>
+		<result property="bookName" column="bookname"/>
+		<result property="price" column="price"/>
+		<result property="stock" column="stock"/>
+		<result property="img" column="img"/>
+		<result property="state" column="state"/>
+	</resultMap>
+	
+	<select id="findByIndex" parameterType="map" resultMap="bookMapper">
+		SELECT id, bookname, price, stock, img, state FROM books WHERE state=1 LIMIT #{index}, #{size}
+	</select>
+	
+	<select id="findByIds" parameterType="list" resultMap="bookMapper">
+		SELECT id, bookname, price, stock, img, state FROM books WHERE id IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="findById" parameterType="int" resultMap="bookMapper">
+		SELECT id, bookname, price, stock, img, state FROM books WHERE id=#{id}
+	</select>
+	
+	<select id="findAll" parameterType="map" resultMap="bookMapper">
+		SELECT id, bookname, price, stock, img, state FROM books LIMIT #{index}, #{size}
+	</select>
+	
+	<select id="findNameByIndex" parameterType="map" resultMap="bookMapper">
+		SELECT id, bookname, price, stock, img, state FROM books
+		WHERE bookname=#{bookName}
+		LIMIT #{index}, #{size}
+	</select>
+	
+	<select id="findAllBooks" resultMap="bookMapper">
+		SELECT id, bookname, price, stock, img, state FROM books
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM books WHERE state=1
+	</select>
+	
+	<select id="countAll" resultType="int">
+		SELECT COUNT(1) FROM books
+	</select>
+	
+	<select id="countByName" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM books WHERE bookname=#{bookName}
+	</select>
+	
+	<update id="updateStock" parameterType="map">
+		UPDATE books SET stock=#{stock} WHERE id=#{id}
+	</update>
+	
+	<update id="updateState" parameterType="map">
+		UPDATE books SET state=#{state} WHERE id=#{id}
+	</update>
+	
+	<update id="update" parameterType="map">
+		UPDATE books SET bookname=#{bookName}, price=#{price}, stock=#{stock}, state=#{state}
+		WHERE id=#{id}
+	</update>
+	
+	<insert id="add" parameterType="map">
+		INSERT INTO books(bookname, price, stock, state, img)
+		VALUES(#{bookName}, #{price}, #{stock}, #{state}, #{img})
+	</insert>
+
+</mapper>

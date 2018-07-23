@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qianfeng.dao.IOrderDao">
+
+	<resultMap type="orders" id="orderMapper">
+		<id property="id" column="id"/>
+		<result property="orderNum" column="ordernum"/>
+		<result property="totalPrice" column="totalprice"/>
+		<result property="createDate" column="createdate"/>
+		<result property="state" column="state"/>
+		<!-- 体现表之间一对一的关系 -->
+		<association property="buyer" resultMap="com.qianfeng.dao.IUserDao.userMapper"></association>
+	</resultMap>
+	
+	<!-- useGeneratedKeys="true" keyProperty="id"获取自增的值 -->
+	<insert id="add" parameterType="orders" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO orders(ordernum, totalprice, createdate, state, buyerId) 
+		VALUES(#{orderNum}, #{totalPrice}, #{createDate}, 0, #{buyer.id})
+	</insert>
+	
+	<select id="countByName" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM orders o
+		INNER JOIN user u
+		ON u.id = o.buyerId
+		WHERE u.username = #{userName}
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM orders
+	</select>
+	
+	<select id="countByState" resultType="int">
+		SELECT COUNT(1) FROM orders WHERE state=#{state}
+	</select>
+	
+	<update id="updateState" parameterType="map">
+		UPDATE orders SET state=#{state} WHERE ordernum=#{orderNum}
+	</update>
+
+</mapper>

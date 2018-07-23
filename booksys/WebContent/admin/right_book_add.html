@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script type="text/javascript" src="../js/jquery-1.12.2.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+<style type="text/css">
+<!--
+body {
+	margin-left: 3px;
+	margin-top: 0px;
+	margin-right: 3px;
+	margin-bottom: 0px;
+}
+.STYLE1 {
+	color: #e1e2e3;
+	font-size: 12px;
+}
+.STYLE6 {color: #000000; font-size: 12; }
+.STYLE10 {color: #000000; font-size: 12px; }
+.STYLE19 {
+	color: #344b50;
+	font-size: 12px;
+}
+.STYLE21 {
+	font-size: 12px;
+	color: #3b6375;
+}
+.STYLE22 {
+	font-size: 12px;
+	color: #295568;
+}
+-->
+</style>
+<script>
+var  highlightcolor='#d5f4fe';
+//此处clickcolor只能用win系统颜色代码才能成功,如果用#xxxxxx的代码就不行,还没搞清楚为什么:(
+var  clickcolor='#51b2f6';
+function  changeto(){
+source=event.srcElement;
+if  (source.tagName=="TR"||source.tagName=="TABLE")
+return;
+while(source.tagName!="TD")
+source=source.parentElement;
+source=source.parentElement;
+cs  =  source.children;
+//alert(cs.length);
+if  (cs[1].style.backgroundColor!=highlightcolor&&source.id!="nc"&&cs[1].style.backgroundColor!=clickcolor)
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor=highlightcolor;
+}
+}
+
+function  changeback(){
+if  (event.fromElement.contains(event.toElement)||source.contains(event.toElement)||source.id=="nc")
+return
+if  (event.toElement!=source&&cs[1].style.backgroundColor!=clickcolor)
+//source.style.backgroundColor=originalcolor
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor="";
+}
+}
+
+function  clickto(){
+source=event.srcElement;
+if  (source.tagName=="TR"||source.tagName=="TABLE")
+return;
+while(source.tagName!="TD")
+source=source.parentElement;
+source=source.parentElement;
+cs  =  source.children;
+//alert(cs.length);
+if  (cs[1].style.backgroundColor!=clickcolor&&source.id!="nc")
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor=clickcolor;
+}
+else
+for(i=0;i<cs.length;i++){
+	cs[i].style.backgroundColor="";
+}
+}
+</script>
+
+<script type="text/javascript">
+	function check(ele) {
+		$.ajax({
+			type:"post",
+			url:"/booksys/checkBook",
+			data:"bookName=" + $("#bookId").val(),
+			dataType:"json",
+			success:function(data) {
+				if (data.code == 1) {
+				} else if (data.code == -1) {
+					alert(data.msg + "已存在，请修改书籍名称");
+				} else {
+					alert(data.msg);
+				}
+			}
+		})
+	};
+</script>
+
+<script type="text/javascript">
+// 	$("#img-change").click(function(){
+// 	    $("#file").click();
+// 	});
+	/*$("#file").change(function (event) {*/
+	var filechange=function(event) {
+	    var files = event.target.files, file;
+	    if (files && files.length > 0) {
+	        // 获取目前上传的文件
+	        file = files[0];// 文件大小校验的动作
+	        if (file.size > 1024 * 1024 * 2) {
+	            alert('图片大小不能超过 2MB!');
+	            return false;
+	        }
+	        // 获取 window 的 URL 工具
+	        var URL = window.URL || window.webkitURL;
+	        // 通过 file 生成目标 url
+	        var imgURL = URL.createObjectURL(file);
+	        //用attr将img的src属性改成获得的url
+	        $("#img-change").attr("src",imgURL);
+	        // 使用下面这句可以在内存中释放对此 url 的伺服，跑了之后那个 URL 就无效了
+	        // URL.revokeObjectURL(imgURL);
+	    }
+	};
+</script>
+
+</head>
+
+<body bgcolor="#EEF2FB">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="24" bgcolor="#353c44"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="4%" height="19" valign="bottom"><div align="center"><img src="images/tb.gif" width="14" height="14" /></div></td>
+                <td width="96%" valign="bottom"><span class="STYLE1">图书添加</span></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td>
+	<table width="1116" border="0" cellpadding="0" cellspacing="0" class="main">
+		<tr valign="top">
+			<td width="1116"><form id="formId" method="post" action="right_book_update.html" enctype="multipart/form-data" name="form1" onsubmit="return false;">
+				<table width="100%" border="0" cellpadding="2" cellspacing="1" >
+					<tr>
+					<td width="11%" align="right">书籍名称:</td>
+			        <td width="46%" ><input id="bookId" type="text" name="name" width="200px" onblur="check(this)" /></td>
+			        <td width="43%"  rowspan="10" valign="top"></td>
+			        </tr>
+					<tr>
+					<td width="11%" align="right">价格:</td>
+			        <td width="46%" ><input type="text" name="price" width="200px" /></td>
+			        </tr>
+					<tr>
+					<td width="11%" align="right">库存:</td>
+			        <td width="46%" ><input type="text" name="stock" width="200px" /></td>
+			        </tr>
+			        <tr>
+					<td width="11%" align="right">状态:</td>
+			        <td width="46%" ><input type="text" name="state" width="200px" /></td>
+			        </tr>
+			        <tr>
+		            <td align="right">图片路径:</td>
+		            <td>
+		            <input id="file" type="file" name="file" size="30" onchange="filechange(event)" />
+		            </td>
+				    </tr>
+				    <tr>
+				    <td align="right">图片预览:</td>
+				    <td>
+				    	<img id="img-change" src="" width="150px" height="150px" />
+				    </td>
+				    </tr>
+				    <tr><td align="right">&nbsp;</td></tr>
+				    <tr><td align="right">&nbsp;</td></tr>
+					<tr>
+					<td width="11%" align="right">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			        <td width="46%" align="left">
+			        <input type="submit" value="添&nbsp;&nbsp;加" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			        <input type="reset" value="重&nbsp;&nbsp;置" /></td>
+			        </tr>
+				</table>
+			</form></td>
+		</tr>
+	</table>
+    </td>
+  </tr>
+  <tr>
+    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    </table></td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+	$("form").submit(function(){
+		var input = $("#formId").find("input");
+        $.ajaxFileUpload({
+	        type:"post",
+            url:"/booksys/addBook",
+            fileElementId:"file",
+            data:{
+            	bookName:input.eq(0).val(),
+            	price:input.eq(1).val(),
+            	stock:input.eq(2).val(),
+            	state:input.eq(3).val(),
+            },
+            dataType:"txt",
+            secureuri:false,
+            success:function(data, status) {
+                if(data == "1"){
+                	alert("添加成功");
+                	window.parent.location.reload();
+                } else {
+                	alert("添加失败");
+                }
+            },
+            error:function(data, status, e){
+            	alert(e);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
