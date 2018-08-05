@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qianfeng.dao.IOrderItemDao">
+
+	<resultMap type="item" id="itemMapper">
+		<id property="id" column="id"/>
+		<result property="num" column="num"/>
+		<!-- 嵌套结果 -->
+		<association property="orders" resultMap="com.qianfeng.dao.IOrderDao.orderMapper"></association>
+		<association property="books" resultMap="com.qianfeng.dao.IBookDao.bookMapper"></association>
+	</resultMap>
+	
+	<insert id="add" parameterType="item">
+		INSERT INTO orderitems(orderId, bookId, num)
+		VALUES(#{orders.id}, #{books.id}, #{num})
+	</insert>
+	
+	<select id="findByIndex" parameterType="map" resultMap="itemMapper">
+		SELECT item.*, o.*, b.*, u.* FROM orders o
+		INNER JOIN orderitems item
+		ON o.id = item.orderId
+		INNER JOIN books b
+		ON b.id = item.bookId
+		INNER JOIN user u
+		ON u.id = o.buyerId
+		WHERE u.username = #{name} AND o.id IN
+		(SELECT t.id FROM (SELECT o.* FROM orders o
+		INNER JOIN user u
+		ON u.id = o.buyerId
+		WHERE u.username = #{name} LIMIT #{index}, #{size}) t)
+		ORDER BY item.orderId
+	</select>
+	
+	<select id="findAllByIndex" parameterType="map" resultMap="itemMapper">
+		SELECT item.*, o.*, b.*, u.* FROM orders o
+		INNER JOIN user u
+		ON u.id = o.buyerId
+		INNER JOIN orderitems item
+		ON o.id = item.orderId
+		INNER JOIN books b
+		ON b.id = item.bookId
+		WHERE o.id IN
+		(SELECT t.id FROM (SELECT o.* FROM orders o
+		INNER JOIN user u
+		ON u.id = o.buyerId LIMIT #{index}, #{size}) t)
+		ORDER BY item.orderId
+	</select>
+	
+	<select id="findByState" parameterType="map" resultMap="itemMapper">
+		SELECT item.*, o.*, b.*, u.* FROM orders o
+		INNER JOIN user u
+		ON u.id = o.buyerId
+		INNER JOIN orderitems item
+		ON o.id = item.orderId
+		INNER JOIN books b
+		ON b.id = item.bookId
+		WHERE o.state=#{state} AND o.id IN
+		(SELECT t.id FROM (SELECT o.* FROM orders o
+		INNER JOIN user u
+		ON u.id = o.buyerId
+		WHERE o.state=#{state} LIMIT #{index}, #{size}) t)
+		ORDER BY item.orderId
+	</select>
+	
+	<select id="findAll" resultMap="itemMapper">
+		SELECT item.*, o.* FROM orderitems item
+		INNER JOIN orders o
+		ON item.orderId = o.id
+	</select>
+	
+	<select id="countByBookId" parameterType="int" resultType="int">
+		SELECT COUNT(1) FROM orderitems WHERE bookId=#{bookId} 
+	</select>
+
+</mapper>

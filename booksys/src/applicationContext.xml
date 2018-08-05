@@ -13,7 +13,7 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- 注解扫描， base-package 表示扫描指定的包及子包下的注解 -->
-	<context:component-scan base-package="com.qianfeng">
+	<context:component-scan base-package="com.booksys">
 		<!-- 排除扫描那些注解 -->
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
@@ -38,14 +38,14 @@
 		<!-- 加载mybatis主配置文件 -->
 		<property name="configLocation" value="classpath:mybatis.xml" />
 		<!-- 加载映射文件 -->
-		<property name="mapperLocations" value="classpath:com/qianfeng/mapper/*.xml" />
+		<property name="mapperLocations" value="classpath:com/booksys/mapper/*.xml" />
 
 	</bean>
 
 	<!-- 扫描映射代理的接口类,注入到spring容器中 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactoryBeanName" value="sessionFactory"></property>
-		<property name="basePackage" value="com.qianfeng.dao"></property>
+		<property name="basePackage" value="com.booksys.dao"></property>
 	</bean>
 
 	<!-- 1配置事务管理类 -->
@@ -69,7 +69,7 @@
 	<!-- 3AOP配置 -->
 	<aop:config>
 		<!-- 切入点 -->
-		<aop:pointcut expression="execution(* com.qianfeng.service.impl.*.*(..))" id="pc" />
+		<aop:pointcut expression="execution(* com.booksys.service.impl.*.*(..))" id="pc" />
 
 		<!-- 通知 -->
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="pc" />

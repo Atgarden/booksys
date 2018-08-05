@@ -16,11 +16,11 @@
 
 	<!-- 设置类型的别名 -->
 	<typeAliases>
-		<typeAlias type="com.qianfeng.entity.User" alias="user" />
-		<typeAlias type="com.qianfeng.entity.Books" alias="books" />
-		<typeAlias type="com.qianfeng.entity.Orders" alias="orders" />
-		<typeAlias type="com.qianfeng.entity.OrderItem" alias="item" />
-		<typeAlias type="com.qianfeng.entity.Admin" alias="admin" />
+		<typeAlias type="com.booksys.entity.User" alias="user" />
+		<typeAlias type="com.booksys.entity.Books" alias="books" />
+		<typeAlias type="com.booksys.entity.Orders" alias="orders" />
+		<typeAlias type="com.booksys.entity.OrderItem" alias="item" />
+		<typeAlias type="com.booksys.entity.Admin" alias="admin" />
 	</typeAliases>
 
 	<mappers>
